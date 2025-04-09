@@ -15,7 +15,7 @@ const RuleSection = ({ title, children, id, activeId }) => {
   }, [activeId, id]);
 
   return (
-    <div ref={sectionRef} className="border border-purple-500 rounded-2xl overflow-hidden mb-6 shadow-xl backdrop-blur-md bg-gradient-to-br from-black/60 via-purple-900/40 to-blue-900/40">
+    <div ref={sectionRef} id={id} className="border border-purple-500 rounded-2xl overflow-hidden mb-6 shadow-xl backdrop-blur-md bg-gradient-to-br from-black/60 via-purple-900/40 to-blue-900/40">
       <button
         onClick={() => setOpen(!open)}
         className="w-full text-left px-6 py-4 bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-90 transition font-semibold text-lg text-white tracking-wide"
@@ -85,19 +85,29 @@ export default function RulesPage() {
       <div className="pt-20 relative w-full min-h-screen overflow-hidden bg-black">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 filter blur-3xl"></div>
 
-        <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-8 text-xl font-semibold">
-          <Link href="/" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Home</Link>
-          <Link href="/about" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">About Us</Link>
-          <Link href="/join" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Join Us</Link>
-          <Link href="/rules" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Rules</Link>
-        </nav>
+        {/* Sidebar for navigation */}
+        <div className="fixed top-20 left-0 z-30 p-6 bg-black bg-opacity-70 text-white w-64 h-screen overflow-auto">
+          <strong className="text-lg mb-4">Jump To:</strong>
+          <div className="space-y-2">
+            {sections.map((section) => (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                className="block px-4 py-2 text-lg hover:bg-purple-600 transition"
+              >
+                {section.label}
+              </a>
+            ))}
+          </div>
+        </div>
 
+        {/* Main content */}
         <div className="relative z-20 max-w-5xl mx-auto px-4 py-10 text-purple-100" id="rules-top">
           <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400">
             Abyssal RP — Official Server Rules
           </h1>
 
-          {sections.map(section => (
+          {sections.map((section) => (
             <RuleSection key={section.id} id={section.id} title={section.label} activeId={activeId}>
               <p>Detailed rules and information about {section.label}.</p>
             </RuleSection>

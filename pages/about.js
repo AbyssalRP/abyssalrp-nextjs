@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-export default function Home() {
+export default function AboutUs() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function Home() {
   }, [canvasRef]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
+    <div className="relative w-full min-h-screen overflow-hidden bg-black">
       {/* Nebula Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 filter blur-3xl"></div>
 
@@ -69,18 +69,17 @@ export default function Home() {
       </nav>
 
       {/* Main Content Container */}
-      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center">
-        <h1 className="mb-4 text-7xl font-bold uppercase drop-shadow-lg bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
-          Welcome to Abyssal RP
+      <div className="relative z-20 flex flex-col items-center justify-center h-full px-8 py-32 text-center">
+        <h1 className="mb-8 text-6xl font-bold uppercase drop-shadow-lg bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
+          About Abyssal RP
         </h1>
-        <p className="mb-8 text-2xl italic drop-shadow-md bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 text-transparent bg-clip-text">
-          We came to escape. We stayed because our stories got better than real life.
+        <p className="max-w-4xl mx-auto text-xl italic drop-shadow-md bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 text-transparent bg-clip-text">
+          Welcome to Abyssal RP,<br/><br/>
+          If you're here, chances are you've walked the same path many of us have. You've spent hours, days, even months searching for a city that truly feels like home—a city free from admin abuse, metagaming, and toxicity. Like you, we've grown tired of servers dominated by repetitive cop-and-criminal scenarios, neglecting the vibrant experiences that civilians crave.<br/><br/>
+          At Abyssal RP, we're building something different. We're not just another GTA RP server—we're a thriving community built by roleplayers, for roleplayers. Our vision is clear: to foster a balanced ecosystem where every character has a meaningful story to tell. Whether you're a seasoned criminal mastermind, an upstanding officer of the law, or a civilian running a business or simply exploring your creativity, your story matters here.<br/><br/>
+          We passionately believe that great roleplay isn't defined by power or status, but by rich interactions, immersive experiences, and fair play. Our team is dedicated to transparency, impartial moderation, and genuine community engagement, ensuring Abyssal RP is your escape from the frustrations you've encountered elsewhere.<br/><br/>
+          Join us and become part of a city that values your narrative, respects your journey, and encourages you to thrive. Abyssal RP—more than just a city; it's your new home.
         </p>
-
-        {/* Enhanced Call to Action Button */}
-        <button className="px-10 py-4 text-xl font-bold transition-transform transform hover:scale-110 rounded-full bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-white shadow-lg hover:shadow-2xl">
-          Join the Community
-        </button>
       </div>
 
       {/* Footer */}

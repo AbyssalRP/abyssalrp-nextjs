@@ -1,3 +1,5 @@
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 const rules = [
   {
     title: '1. Support & Reporting',

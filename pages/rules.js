@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 const rules = [
@@ -63,55 +63,58 @@ export default function RulesPage() {
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-black">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
-      <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 blur-3xl" />
+      <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60" />
 
-      <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-8 text-xl font-semibold bg-black bg-opacity-40 backdrop-blur-md">
-        <Link href="/"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Home</a></Link>
-        <Link href="/about"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">About Us</a></Link>
-        <Link href="/join"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Join Us</a></Link>
-        <Link href="/rules"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Rules</a></Link>
+      {/* Navigation */}
+      <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-10 text-xl font-semibold">
+        {['Home', 'About Us', 'Join Us', 'Rules'].map((text, i) => (
+          <Link key={i} href={`/${text === 'Home' ? '' : text.toLowerCase().replace(/ /g, '')}`}>
+            <a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">
+              {text}
+            </a>
+          </Link>
+        ))}
       </nav>
 
-      <div className="relative z-20 flex w-full min-h-screen pt-32">
-        <aside className="w-72 bg-black bg-opacity-80 border-r border-purple-600 shadow-lg overflow-y-auto">
-          <div className="p-5 text-2xl font-bold tracking-wide text-purple-300">Rules</div>
-          <nav className="space-y-1 px-4 pb-8">
-            {rules.map((category, index) => (
-              <div key={index}>
-                <div className="text-sm text-purple-500 uppercase font-bold mt-4 mb-2 tracking-widest">
-                  {category.title}
-                </div>
-                {category.sections.map((section, sIndex) => (
-                  <button
-                    key={sIndex}
-                    onClick={() => setActiveSection(`${category.title} - ${section}`)}
-                    className="w-full text-left px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-900/40 transition text-purple-100"
-                  >
-                    {section}
-                  </button>
-                ))}
-              </div>
-            ))}
-          </nav>
-        </aside>
+      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen pt-40 text-center px-4">
+        {activeSection ? (
+          <>
+            <h1 className="mb-6 text-6xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
+              {activeSection}
+            </h1>
+            <p className="text-lg text-zinc-300 max-w-3xl">
+              (This is placeholder content for <span className="text-purple-200 font-medium">{activeSection}</span>. Paste the full rule text here.)
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="mb-6 text-6xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
+              Welcome to the Abyssal RP Rulebook
+            </h1>
+            <p className="text-lg text-zinc-300 max-w-2xl">
+              Choose a category below to view detailed server rules.
+            </p>
+          </>
+        )}
 
-        <main className="flex-1 px-8 pt-12 overflow-y-auto backdrop-blur-md text-white">
-          {activeSection ? (
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-5xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 bg-clip-text mb-6 drop-shadow">
-                {activeSection}
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl w-full">
+          {rules.map((category, idx) => (
+            <div key={idx} className="p-4 border border-purple-700 rounded-xl bg-black/50 hover:bg-black/70 transition shadow-lg">
+              <h2 className="text-lg font-bold text-purple-300 mb-2 uppercase tracking-wide">
+                {category.title}
               </h2>
-              <p className="text-lg leading-relaxed text-zinc-200/90">
-                (This is placeholder content for <span className="text-purple-300 font-semibold">{activeSection}</span>. Paste the full rule text here.)
-              </p>
+              {category.sections.map((section, sIdx) => (
+                <button
+                  key={sIdx}
+                  onClick={() => setActiveSection(`${category.title} - ${section}`)}
+                  className="block w-full text-left px-2 py-1 text-sm text-purple-100 hover:text-white hover:bg-purple-800/40 rounded"
+                >
+                  {section}
+                </button>
+              ))}
             </div>
-          ) : (
-            <div className="max-w-3xl mx-auto text-center mt-20">
-              <h1 className="text-4xl font-bold text-purple-400 mb-4">Welcome to the Abyssal RP Rulebook</h1>
-              <p className="text-lg text-zinc-300">Choose a category from the left to view detailed server rules.</p>
-            </div>
-          )}
-        </main>
+          ))}
+        </div>
       </div>
 
       <footer className="relative z-20 w-full py-4 text-center text-sm text-white bg-black bg-opacity-60">

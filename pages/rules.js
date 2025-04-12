@@ -67,7 +67,7 @@ export default function RulesPage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-black">
+    <div className="relative w-full min-h-screen flex flex-col bg-black overflow-hidden">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
       <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60" />
 
@@ -93,7 +93,7 @@ export default function RulesPage() {
       </nav>
 
       {/* Layout */}
-      <div className="relative z-20 flex flex-col md:flex-row pt-20 pb-20">
+      <div className="relative z-20 flex-1 flex flex-col md:flex-row pt-20 pb-20">
         {/* Sidebar */}
         <aside
           className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out ${

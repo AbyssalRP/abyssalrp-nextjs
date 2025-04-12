@@ -16,10 +16,10 @@ const rules = [
 
 export default function RulesPage() {
   const [activeSection, setActiveSection] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState({});
   const [search, setSearch] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileRulesOpen, setMobileRulesOpen] = useState(false);
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +27,6 @@ export default function RulesPage() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     let stars = [];
     const createStars = () => {
       stars = Array.from({ length: 300 }, () => ({
@@ -38,13 +37,11 @@ export default function RulesPage() {
         delta: Math.random() * 0.015 + 0.005,
       }));
     };
-
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       createStars();
     };
-
     const animateStars = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach(star => {
@@ -57,7 +54,6 @@ export default function RulesPage() {
       });
       requestAnimationFrame(animateStars);
     };
-
     resizeCanvas();
     animateStars();
     window.addEventListener('resize', resizeCanvas);
@@ -65,26 +61,13 @@ export default function RulesPage() {
   }, []);
 
   const toggleCategory = (idx) => {
-    setOpenCategories((prev) => ({ ...prev, [idx]: !prev[idx] }));
+    setOpenCategories(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  const filteredRules = rules
-    .map((category) => {
-      const matchedSections = category.sections.filter((section) =>
-        section.toLowerCase().includes(search.toLowerCase())
-      );
-      if (
-        category.title.toLowerCase().includes(search.toLowerCase()) ||
-        matchedSections.length > 0
-      ) {
-        return {
-          ...category,
-          sections: matchedSections.length > 0 ? matchedSections : category.sections,
-        };
-      }
-      return null;
-    })
-    .filter(Boolean);
+  const filteredRules = rules.filter(cat =>
+    cat.title.toLowerCase().includes(search.toLowerCase()) ||
+    cat.sections.some(sec => sec.toLowerCase().includes(search.toLowerCase()))
+  );
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -118,9 +101,9 @@ export default function RulesPage() {
           ))}
         </div>
 
-        {/* Mobile Dropdown */}
+        {/* Mobile Dropdown Menu */}
         {mobileNavOpen && (
-          <div className="md:hidden mt-4 flex flex-col space-y-2 bg-black bg-opacity-70 p-4 rounded-lg">
+          <div className="md:hidden mt-4 space-y-3 bg-black/80 p-4 rounded-lg">
             {navLinks.map((link, i) => (
               <Link key={i} href={link.href}>
                 <a
@@ -131,18 +114,52 @@ export default function RulesPage() {
                 </a>
               </Link>
             ))}
+            <button
+              onClick={() => setMobileRulesOpen(!mobileRulesOpen)}
+              className="w-full text-left text-pink-400 font-bold uppercase text-sm mt-2"
+            >
+              {mobileRulesOpen ? 'Hide Rules Index' : 'Show Rules Index'}
+            </button>
+            {mobileRulesOpen && (
+              <div className="mt-2 space-y-4">
+                {rules.map((category, idx) => (
+                  <div key={idx}>
+                    <button
+                      onClick={() => toggleCategory(idx)}
+                      className="text-left w-full text-purple-300 font-medium"
+                    >
+                      {category.title}
+                    </button>
+                    <div className={`overflow-hidden transition-all ${openCategories[idx] ? 'max-h-[300px]' : 'max-h-0'}`}>
+                      {category.sections.map((section, sIdx) => (
+                        <button
+                          key={sIdx}
+                          onClick={() => {
+                            setActiveSection(`${category.title} - ${section}`);
+                            setMobileNavOpen(false);
+                            setMobileRulesOpen(false);
+                          }}
+                          className={`block text-left text-sm px-2 py-1 w-full rounded ${
+                            activeSection === `${category.title} - ${section}`
+                              ? 'bg-purple-700 text-white font-semibold'
+                              : 'text-purple-200 hover:bg-purple-900'
+                          }`}
+                        >
+                          {section}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </nav>
 
       {/* Layout */}
       <div className="relative z-20 flex-1 flex flex-col md:flex-row pt-20 pb-20">
-        {/* Sidebar */}
-        <aside
-          className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out ${
-            sidebarOpen ? 'block' : 'hidden'
-          } md:sticky md:top-20 md:h-[calc(100vh-5rem)] md:overflow-y-auto fixed top-20 left-0 z-40 max-h-[calc(100vh-80px)] md:max-h-none`}
-        >
+        <aside className="hidden md:block bg-black/70 border-r border-purple-800 p-4 md:w-72 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
           <h2 className="text-xl text-purple-300 font-bold mb-4">Rule Categories</h2>
           {filteredRules.map((category, idx) => (
             <div key={idx} className="mb-4">
@@ -162,8 +179,6 @@ export default function RulesPage() {
                     key={sIdx}
                     onClick={() => {
                       setActiveSection(`${category.title} - ${section}`);
-                      setSidebarOpen(false);
-                      setMobileNavOpen(false);
                     }}
                     className={`block w-full text-left px-3 py-1 text-sm rounded transition ${
                       activeSection === `${category.title} - ${section}`
@@ -181,7 +196,6 @@ export default function RulesPage() {
 
         {/* Main Content */}
         <main className="flex-1 px-6 pt-6 pb-10">
-          {/* Search Bar */}
           <div className="mb-6">
             <input
               type="text"

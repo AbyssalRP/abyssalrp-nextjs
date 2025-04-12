@@ -67,7 +67,7 @@ export default function RulesPage() {
       <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60" />
 
       {/* Top Nav */}
-      <nav className="absolute top-0 z-30 flex justify-between items-center w-full px-6 py-6 text-xl font-semibold">
+      <nav className="absolute top-0 z-30 flex justify-between items-center w-full px-6 py-3 text-xl font-semibold">
         <div className="md:hidden">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -88,12 +88,12 @@ export default function RulesPage() {
       </nav>
 
       {/* Content Layout */}
-      <div className="relative z-20 flex flex-col md:flex-row pt-32">
+      <div className="relative z-20 flex flex-col md:flex-row pt-20">
         {/* Sidebar */}
         <aside
           className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out ${
             sidebarOpen ? 'block' : 'hidden'
-          } md:relative fixed top-24 left-0 z-40`}
+          } md:relative fixed top-20 left-0 z-40`}
         >
           <h2 className="text-xl text-purple-300 font-bold mb-4">Rule Categories</h2>
           {rules.map((category, idx) => (
@@ -116,7 +116,7 @@ export default function RulesPage() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 px-6 py-10">
+        <main className="flex-1 px-6 pt-6 pb-10">
           {activeSection ? (
             <>
               <h1 className="mb-6 text-5xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">

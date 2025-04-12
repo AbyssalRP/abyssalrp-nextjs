@@ -61,29 +61,31 @@ export default function RulesPage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 filter blur-3xl"></div>
-      <canvas ref={canvasRef} className="absolute inset-0 z-10" />
+    <div className="relative w-full min-h-screen overflow-hidden bg-black">
+      <canvas ref={canvasRef} className="fixed inset-0 z-0" />
+      <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 blur-3xl" />
 
-      <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-8 text-xl font-semibold">
-        <Link href="/"><a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Home</a></Link>
-        <Link href="/about"><a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">About Us</a></Link>
-        <Link href="/join"><a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Join Us</a></Link>
-        <Link href="/rules"><a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Rules</a></Link>
+      <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-8 text-xl font-semibold bg-black bg-opacity-40 backdrop-blur-md">
+        <Link href="/"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Home</a></Link>
+        <Link href="/about"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">About Us</a></Link>
+        <Link href="/join"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Join Us</a></Link>
+        <Link href="/rules"><a className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-80 transition-opacity">Rules</a></Link>
       </nav>
 
-      <div className="relative z-20 flex w-full h-full">
+      <div className="relative z-20 flex w-full min-h-screen pt-32">
         <aside className="w-72 bg-black bg-opacity-80 border-r border-purple-600 shadow-lg overflow-y-auto">
           <div className="p-5 text-2xl font-bold tracking-wide text-purple-300">Rules</div>
           <nav className="space-y-1 px-4 pb-8">
             {rules.map((category, index) => (
               <div key={index}>
-                <div className="text-sm text-purple-500 uppercase font-bold mt-4 mb-2 tracking-widest">{category.title}</div>
+                <div className="text-sm text-purple-500 uppercase font-bold mt-4 mb-2 tracking-widest">
+                  {category.title}
+                </div>
                 {category.sections.map((section, sIndex) => (
                   <button
                     key={sIndex}
                     onClick={() => setActiveSection(`${category.title} - ${section}`)}
-                    className="w-full text-left px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-900/40 transition"
+                    className="w-full text-left px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-900/40 transition text-purple-100"
                   >
                     {section}
                   </button>
@@ -93,12 +95,14 @@ export default function RulesPage() {
           </nav>
         </aside>
 
-        <main className="flex-1 p-10 overflow-y-auto backdrop-blur-md text-white">
+        <main className="flex-1 px-8 pt-12 overflow-y-auto backdrop-blur-md text-white">
           {activeSection ? (
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-purple-300 mb-6 drop-shadow">{activeSection}</h2>
-              <p className="text-base leading-relaxed text-zinc-200/90">
-                (This is placeholder content for <span className="text-purple-400">{activeSection}</span>. Paste the full rule text here.)
+              <h2 className="text-5xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 bg-clip-text mb-6 drop-shadow">
+                {activeSection}
+              </h2>
+              <p className="text-lg leading-relaxed text-zinc-200/90">
+                (This is placeholder content for <span className="text-purple-300 font-semibold">{activeSection}</span>. Paste the full rule text here.)
               </p>
             </div>
           ) : (
@@ -110,7 +114,7 @@ export default function RulesPage() {
         </main>
       </div>
 
-      <footer className="absolute bottom-0 z-20 w-full py-4 text-center text-sm text-white bg-black bg-opacity-60">
+      <footer className="relative z-20 w-full py-4 text-center text-sm text-white bg-black bg-opacity-60">
         © 2025 Abyssal RP. Designed for storytellers, built by players.
       </footer>
     </div>

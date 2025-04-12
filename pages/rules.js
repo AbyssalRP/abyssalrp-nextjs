@@ -18,6 +18,7 @@ export default function RulesPage() {
   const [activeSection, setActiveSection] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState({});
+  const [search, setSearch] = useState('');
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -66,6 +67,24 @@ export default function RulesPage() {
     setOpenCategories((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  const filteredRules = rules
+    .map((category) => {
+      const matchedSections = category.sections.filter((section) =>
+        section.toLowerCase().includes(search.toLowerCase())
+      );
+      if (
+        category.title.toLowerCase().includes(search.toLowerCase()) ||
+        matchedSections.length > 0
+      ) {
+        return {
+          ...category,
+          sections: matchedSections.length > 0 ? matchedSections : category.sections,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-black overflow-hidden">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
@@ -82,10 +101,15 @@ export default function RulesPage() {
           </button>
         </div>
         <div className="hidden md:flex justify-center w-full space-x-10">
-          {['Home', 'About Us', 'Join Us', 'Rules'].map((text, i) => (
-            <Link key={i} href={`/${text === 'Home' ? '' : text.toLowerCase().replace(/ /g, '')}`}>
+          {[
+            { name: 'Home', href: '/' },
+            { name: 'About Us', href: '/about' },
+            { name: 'Join Us', href: '/join' },
+            { name: 'Rules', href: '/rules' },
+          ].map((link, i) => (
+            <Link key={i} href={link.href}>
               <a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">
-                {text}
+                {link.name}
               </a>
             </Link>
           ))}
@@ -101,7 +125,7 @@ export default function RulesPage() {
           } md:sticky md:top-20 md:h-[calc(100vh-5rem)] md:overflow-y-auto fixed top-20 left-0 z-40 max-h-[calc(100vh-80px)] md:max-h-none`}
         >
           <h2 className="text-xl text-purple-300 font-bold mb-4">Rule Categories</h2>
-          {rules.map((category, idx) => (
+          {filteredRules.map((category, idx) => (
             <div key={idx} className="mb-4">
               <button
                 onClick={() => toggleCategory(idx)}
@@ -137,6 +161,17 @@ export default function RulesPage() {
 
         {/* Main Content */}
         <main className="flex-1 px-6 pt-6 pb-10">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Search rules..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full max-w-lg px-4 py-2 bg-black border border-purple-600 text-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-purple-400"
+            />
+          </div>
+
           {activeSection ? (
             <>
               <h1 className="mb-6 text-5xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
@@ -153,7 +188,7 @@ export default function RulesPage() {
                 Welcome to the Abyssal RP Rulebook
               </h1>
               <p className="text-lg text-zinc-300 max-w-2xl">
-                Choose a category from the sidebar to view detailed server rules.
+                Use the sidebar or search to explore detailed server rules.
               </p>
             </>
           )}

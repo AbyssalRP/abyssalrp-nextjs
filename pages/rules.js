@@ -1,135 +1,137 @@
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 
-const RuleSection = ({ title, children, id, activeId }) => {
-  const [open, setOpen] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const shouldOpen = activeId === id;
-    setOpen(shouldOpen);
-
-    if (shouldOpen && sectionRef.current) {
-      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [activeId, id]);
-
-  return (
-    <div ref={sectionRef} className="border border-purple-500 rounded-2xl overflow-hidden mb-6 shadow-xl backdrop-blur-md bg-gradient-to-br from-black/60 via-purple-900/40 to-blue-900/40">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full text-left px-6 py-4 bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 hover:opacity-90 transition font-semibold text-lg text-white tracking-wide"
-      >
-        {title}
-      </button>
-      {open && (
-        <div className="px-6 py-6 bg-gradient-to-br from-black/80 via-gray-900/80 to-black/80 text-purple-100 space-y-6 italic leading-relaxed tracking-wide font-light text-lg">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const sections = [
-  { id: "support-system", label: "Support System" },
-  { id: "ticket-types", label: "Types of Tickets" },
-  // Add all other sections here...
+const rules = [
+  {
+    title: '1. Support & Reporting',
+    sections: [
+      'Support System',
+      'Types of Tickets',
+      'Reporting Protocol',
+    ],
+  },
+  {
+    title: '2. Community Conduct',
+    sections: [
+      'Discord Rules',
+      'Voice Chat Rules',
+      'Hate Speech & Discrimination',
+    ],
+  },
+  {
+    title: '3. Roleplay Standards',
+    sections: [
+      'RDM & VDM',
+      'Breaking Character',
+      'Combat Logging',
+      'Fail RP',
+      'Metagaming',
+      'Gun Fear & Valuing Life',
+    ],
+  },
+  {
+    title: '4. EMS, NLR & Death',
+    sections: [
+      'EMS Revives & New Life Rule',
+      'Suicide RP',
+    ],
+  },
+  {
+    title: '5. Zone & Location Rules',
+    sections: [
+      'Revealing Locations',
+      'Green Zone',
+    ],
+  },
+  {
+    title: '6. Criminal RP & Heists',
+    sections: [
+      'General Heist Rules',
+      'Hostage Rules',
+      'Negotiations',
+      'Escape & Chases',
+      'PD Limitations',
+      'Cooldowns',
+      'Interference',
+      'Final Word',
+    ],
+  },
+  {
+    title: '7. Gangs & Turf',
+    sections: [
+      'Gang Creation Requirements',
+      'Gang Structure',
+      'Gang Wars',
+      'Bleeding Out & Switching Gangs',
+      'Interaction with PD',
+      'Gang Disbandment',
+    ],
+  },
+  {
+    title: '8. Staff & Developer Conduct',
+    sections: [
+      'Developer Rules',
+    ],
+  },
+  {
+    title: '9. AFK & Queue Holding',
+    sections: [
+      'AFK & Queue Abuse',
+    ],
+  },
+  {
+    title: '10. Key RP Terms',
+    sections: [
+      'Fail RP',
+      'Bleed Out',
+      'Powergaming',
+      'On-sight',
+      'Combat Logging',
+      'Stream Sniping',
+    ],
+  },
 ];
 
 export default function RulesPage() {
-  const [activeId, setActiveId] = useState('');
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let stars = [];
-    const createStars = () => {
-      stars = Array.from({ length: 300 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 1.2,
-        alpha: Math.random(),
-        delta: Math.random() * 0.015 + 0.005,
-      }));
-    };
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      createStars();
-    };
-
-    const animateStars = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      stars.forEach((star) => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-        ctx.fill();
-
-        star.alpha += star.delta;
-        if (star.alpha <= 0 || star.alpha >= 1) star.delta = -star.delta;
-      });
-
-      requestAnimationFrame(animateStars);
-    };
-
-    resizeCanvas();
-    animateStars();
-
-    window.addEventListener('resize', resizeCanvas);
-
-    return () => window.removeEventListener('resize', resizeCanvas);
-  }, []);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      setActiveId(window.location.hash.replace('#', ''));
-    };
-
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  const [activeSection, setActiveSection] = useState(null);
 
   return (
-    <>
-      <div className="pt-20 relative w-full min-h-screen overflow-hidden bg-black">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60 filter blur-3xl"></div>
-
-        <canvas ref={canvasRef} className="absolute inset-0 z-10" />
-
-        <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-8 text-xl font-semibold">
-          <Link href="/" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Home</Link>
-          <Link href="/about" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">About Us</Link>
-          <Link href="/join" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Join Us</Link>
-          <Link href="/rules" className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">Rules</Link>
-        </nav>
-
-        <div className="relative z-20 max-w-5xl mx-auto px-4 py-10 text-purple-100" id="rules-top">
-          <h1 className="text-4xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400">
-            Abyssal RP — Official Server Rules
-          </h1>
-
-          {sections.map((section) => (
-            <RuleSection key={section.id} id={section.id} title={section.label} activeId={activeId}>
-              <p>Detailed rules and information about {section.label}.</p>
-            </RuleSection>
+    <div className="flex h-screen bg-gradient-to-b from-black via-zinc-900 to-zinc-950 text-white">
+      <aside className="w-72 bg-black bg-opacity-80 border-r border-purple-600 shadow-lg overflow-y-auto">
+        <div className="p-5 text-2xl font-bold tracking-wide text-purple-300">Rules</div>
+        <nav className="space-y-1 px-4 pb-8">
+          {rules.map((category, index) => (
+            <div key={index}>
+              <div className="text-sm text-purple-500 uppercase font-bold mt-4 mb-2 tracking-widest">
+                {category.title}
+              </div>
+              {category.sections.map((section, sIndex) => (
+                <button
+                  key={sIndex}
+                  onClick={() => setActiveSection(`${category.title} - ${section}`)}
+                  className="w-full text-left px-3 py-2 text-sm font-medium rounded-md hover:bg-purple-900/40 transition"
+                >
+                  {section}
+                </button>
+              ))}
+            </div>
           ))}
-        </div>
-
-        <footer className="absolute bottom-0 z-20 w-full py-4 text-center text-sm text-purple-200 bg-black bg-opacity-60">
-          © 2025 Abyssal RP. Designed for storytellers, built by players.
-        </footer>
-      </div>
-    </>
+        </nav>
+      </aside>
+      <main className="flex-1 p-10 overflow-y-auto backdrop-blur-md">
+        {activeSection ? (
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-purple-300 mb-6 drop-shadow">{activeSection}</h2>
+            <p className="text-base leading-relaxed text-zinc-200/90">
+              (This is placeholder content for <span className="text-purple-400">{activeSection}</span>. Paste the full rule text here.)
+            </p>
+          </div>
+        ) : (
+          <div className="max-w-3xl mx-auto text-center mt-20">
+            <h1 className="text-4xl font-bold text-purple-400 mb-4">Welcome to the Abyssal RP Rulebook</h1>
+            <p className="text-lg text-zinc-300">Choose a category from the left to view detailed server rules.</p>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

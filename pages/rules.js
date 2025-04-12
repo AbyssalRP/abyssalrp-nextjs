@@ -63,7 +63,7 @@ export default function RulesPage() {
   }, []);
 
   const toggleCategory = (idx) => {
-    setOpenCategories(prev => ({ ...prev, [idx]: !prev[idx] }));
+    setOpenCategories((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
 
   return (
@@ -93,12 +93,12 @@ export default function RulesPage() {
       </nav>
 
       {/* Layout */}
-      <div className="relative z-20 flex flex-col md:flex-row pt-20">
+      <div className="relative z-20 flex flex-col md:flex-row pt-20 pb-20">
         {/* Sidebar */}
         <aside
-          className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out max-h-[calc(100vh-80px)] overflow-y-auto ${
+          className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out ${
             sidebarOpen ? 'block' : 'hidden'
-          } md:relative fixed top-20 left-0 z-40`}
+          } md:sticky md:top-20 md:h-[calc(100vh-5rem)] md:overflow-y-auto fixed top-20 left-0 z-40 max-h-[calc(100vh-80px)] md:max-h-none`}
         >
           <h2 className="text-xl text-purple-300 font-bold mb-4">Rule Categories</h2>
           {rules.map((category, idx) => (
@@ -109,27 +109,33 @@ export default function RulesPage() {
               >
                 {category.title}
               </button>
-              {openCategories[idx] && (
-                <div className="ml-2">
-                  {category.sections.map((section, sIdx) => (
-                    <button
-                      key={sIdx}
-                      onClick={() => {
-                        setActiveSection(`${category.title} - ${section}`);
-                        setSidebarOpen(false); // auto-close sidebar on mobile
-                      }}
-                      className="block w-full text-left px-3 py-1 text-sm text-purple-100 hover:text-white hover:bg-purple-800/30 rounded transition"
-                    >
-                      {section}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div
+                className={`ml-2 overflow-hidden transition-all duration-300 ease-in-out ${
+                  openCategories[idx] ? 'max-h-[500px]' : 'max-h-0'
+                }`}
+              >
+                {category.sections.map((section, sIdx) => (
+                  <button
+                    key={sIdx}
+                    onClick={() => {
+                      setActiveSection(`${category.title} - ${section}`);
+                      setSidebarOpen(false);
+                    }}
+                    className={`block w-full text-left px-3 py-1 text-sm rounded transition ${
+                      activeSection === `${category.title} - ${section}`
+                        ? 'bg-purple-700 text-white font-semibold'
+                        : 'text-purple-100 hover:text-white hover:bg-purple-800/30'
+                    }`}
+                  >
+                    {section}
+                  </button>
+                ))}
+              </div>
             </div>
           ))}
         </aside>
 
-        {/* Main */}
+        {/* Main Content */}
         <main className="flex-1 px-6 pt-6 pb-10">
           {activeSection ? (
             <>

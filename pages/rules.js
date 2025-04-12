@@ -19,6 +19,7 @@ export default function RulesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState({});
   const [search, setSearch] = useState('');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -85,28 +86,30 @@ export default function RulesPage() {
     })
     .filter(Boolean);
 
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Join Us', href: '/join' },
+    { name: 'Rules', href: '/rules' },
+  ];
+
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-black overflow-hidden">
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
       <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60" />
 
       {/* Top Nav */}
-      <nav className="absolute top-0 z-30 flex justify-between items-center w-full px-6 py-3 text-xl font-semibold">
-        <div className="md:hidden">
+      <nav className="absolute top-0 z-30 w-full px-6 py-3 text-xl font-semibold">
+        <div className="flex justify-between items-center md:hidden">
           <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={() => setMobileNavOpen(!mobileNavOpen)}
             className="text-white bg-purple-800 hover:bg-purple-700 px-3 py-2 rounded"
           >
             ☰ Menu
           </button>
         </div>
-        <div className="hidden md:flex justify-center w-full space-x-10">
-          {[
-            { name: 'Home', href: '/' },
-            { name: 'About Us', href: '/about' },
-            { name: 'Join Us', href: '/join' },
-            { name: 'Rules', href: '/rules' },
-          ].map((link, i) => (
+        <div className="hidden md:flex justify-center space-x-10">
+          {navLinks.map((link, i) => (
             <Link key={i} href={link.href}>
               <a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">
                 {link.name}
@@ -114,6 +117,22 @@ export default function RulesPage() {
             </Link>
           ))}
         </div>
+
+        {/* Mobile Dropdown */}
+        {mobileNavOpen && (
+          <div className="md:hidden mt-4 flex flex-col space-y-2 bg-black bg-opacity-70 p-4 rounded-lg">
+            {navLinks.map((link, i) => (
+              <Link key={i} href={link.href}>
+                <a
+                  onClick={() => setMobileNavOpen(false)}
+                  className="block text-purple-300 hover:text-white transition"
+                >
+                  {link.name}
+                </a>
+              </Link>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Layout */}
@@ -144,6 +163,7 @@ export default function RulesPage() {
                     onClick={() => {
                       setActiveSection(`${category.title} - ${section}`);
                       setSidebarOpen(false);
+                      setMobileNavOpen(false);
                     }}
                     className={`block w-full text-left px-3 py-1 text-sm rounded transition ${
                       activeSection === `${category.title} - ${section}`

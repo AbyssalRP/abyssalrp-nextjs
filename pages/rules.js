@@ -16,6 +16,7 @@ const rules = [
 
 export default function RulesPage() {
   const [activeSection, setActiveSection] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -65,58 +66,81 @@ export default function RulesPage() {
       <canvas ref={canvasRef} className="fixed inset-0 z-0" />
       <div className="fixed inset-0 z-10 bg-gradient-to-br from-purple-900 via-blue-900 to-black opacity-60" />
 
-      {/* Navigation */}
-      <nav className="absolute top-0 z-30 flex justify-center w-full py-6 space-x-10 text-xl font-semibold">
-        {['Home', 'About Us', 'Join Us', 'Rules'].map((text, i) => (
-          <Link key={i} href={`/${text === 'Home' ? '' : text.toLowerCase().replace(/ /g, '')}`}>
-            <a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">
-              {text}
-            </a>
-          </Link>
-        ))}
+      {/* Top Nav */}
+      <nav className="absolute top-0 z-30 flex justify-between items-center w-full px-6 py-6 text-xl font-semibold">
+        <div className="md:hidden">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="text-white bg-purple-800 hover:bg-purple-700 px-3 py-2 rounded"
+          >
+            ☰ Menu
+          </button>
+        </div>
+        <div className="hidden md:flex justify-center w-full space-x-10">
+          {['Home', 'About Us', 'Join Us', 'Rules'].map((text, i) => (
+            <Link key={i} href={`/${text === 'Home' ? '' : text.toLowerCase().replace(/ /g, '')}`}>
+              <a className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text hover:opacity-80 transition-opacity">
+                {text}
+              </a>
+            </Link>
+          ))}
+        </div>
       </nav>
 
-      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen pt-40 text-center px-4">
-        {activeSection ? (
-          <>
-            <h1 className="mb-6 text-6xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
-              {activeSection}
-            </h1>
-            <p className="text-lg text-zinc-300 max-w-3xl">
-              (This is placeholder content for <span className="text-purple-200 font-medium">{activeSection}</span>. Paste the full rule text here.)
-            </p>
-          </>
-        ) : (
-          <>
-            <h1 className="mb-6 text-6xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
-              Welcome to the Abyssal RP Rulebook
-            </h1>
-            <p className="text-lg text-zinc-300 max-w-2xl">
-              Choose a category below to view detailed server rules.
-            </p>
-          </>
-        )}
-
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl w-full">
+      {/* Content Layout */}
+      <div className="relative z-20 flex flex-col md:flex-row pt-32">
+        {/* Sidebar */}
+        <aside
+          className={`bg-black/70 border-r border-purple-800 p-4 md:w-72 w-full md:block transition-all duration-300 ease-in-out ${
+            sidebarOpen ? 'block' : 'hidden'
+          } md:relative fixed top-24 left-0 z-40`}
+        >
+          <h2 className="text-xl text-purple-300 font-bold mb-4">Rule Categories</h2>
           {rules.map((category, idx) => (
-            <div key={idx} className="p-4 border border-purple-700 rounded-xl bg-black/50 hover:bg-black/70 transition shadow-lg">
-              <h2 className="text-lg font-bold text-purple-300 mb-2 uppercase tracking-wide">
-                {category.title}
-              </h2>
+            <div key={idx} className="mb-4">
+              <h3 className="text-sm text-pink-400 font-semibold uppercase mb-2">{category.title}</h3>
               {category.sections.map((section, sIdx) => (
                 <button
                   key={sIdx}
-                  onClick={() => setActiveSection(`${category.title} - ${section}`)}
-                  className="block w-full text-left px-2 py-1 text-sm text-purple-100 hover:text-white hover:bg-purple-800/40 rounded"
+                  onClick={() => {
+                    setActiveSection(`${category.title} - ${section}`);
+                    setSidebarOpen(false); // auto-close on mobile
+                  }}
+                  className="block w-full text-left px-3 py-1 text-sm text-purple-100 hover:text-white hover:bg-purple-800/30 rounded transition"
                 >
                   {section}
                 </button>
               ))}
             </div>
           ))}
-        </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 px-6 py-10">
+          {activeSection ? (
+            <>
+              <h1 className="mb-6 text-5xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
+                {activeSection}
+              </h1>
+              <p className="text-lg text-zinc-300 max-w-3xl">
+                (This is placeholder content for{' '}
+                <span className="text-purple-200 font-medium">{activeSection}</span>. Paste the full rule text here.)
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="mb-6 text-5xl font-extrabold uppercase bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400 text-transparent bg-clip-text">
+                Welcome to the Abyssal RP Rulebook
+              </h1>
+              <p className="text-lg text-zinc-300 max-w-2xl">
+                Choose a category from the sidebar to view detailed server rules.
+              </p>
+            </>
+          )}
+        </main>
       </div>
 
+      {/* Footer */}
       <footer className="relative z-20 w-full py-4 text-center text-sm text-white bg-black bg-opacity-60">
         © 2025 Abyssal RP. Designed for storytellers, built by players.
       </footer>

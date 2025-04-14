@@ -1,4 +1,3 @@
-// next.config.cjs
 module.exports = {
   webpack: (config) => {
     config.resolve.fallback = {
